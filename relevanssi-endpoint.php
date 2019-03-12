@@ -11,26 +11,27 @@ if ( !class_exists( 'Relevanssi_Endpoint' ) ) {
 
 	class Relevanssi_Endpoint extends WP_REST_Controller {
 
+			public function __construct() {
+				add_action('rest_api_init', [$this, 'register_routes']);
+			}
+
 			public function register_routes() {
-				$version 		= '1';
-				$namespace 	= 'relevanssi/v';
-				$base				= 'route';
+				$version = '1';
+				$namespace 	= 'relevanssi/v' . $version;
+				$base				= 'search';
 
 				register_rest_route( $namespace, '/' . $base, array( 
 					'methods'							=> WP_REST_Server::READABLE,
 					'callback' 						=> array( $this, 'get_search_results' ),
-					'permission_callback' => array( $this, 'get_search_results_permissions_check' ),
 					'args' 								=> array()
 				) );
 			}
 
-			public function get_search_results( $request ) {
-				return $request;
+			public function get_search_results( WP_REST_Request $request ) {
+				$parameters = $request->get_query_params($request);
+				return $parameters;
 			}
 
-			public function get_search_results_permissions_check( $request ) {
-				return true;
-			}
 	}
 
 	$search = new Relevanssi_Endpoint();
