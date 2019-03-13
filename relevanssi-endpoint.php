@@ -14,11 +14,9 @@ if ( !class_exists( 'Relevanssi_Endpoint' ) ) {
 		private $post_types;
 
 		public function __construct() {
+			register_activation_hook( __FILE__, [$this, 'install'] );
+			add_action( 'rest_api_init', [$this, 'register_routes'] );
 			$this->post_types = $this->get_post_types();
-
-			add_action('rest_api_init', [$this, 'register_routes']);
-
-			register_activation_hook( __FILE__, [$this, 'install']);
 		}
 
 		public function register_routes() {
@@ -74,7 +72,7 @@ if ( !class_exists( 'Relevanssi_Endpoint' ) ) {
 				$search_query->the_post();
 			}
 
-			return $args;
+			return $search_query;
 		}
 
 		public function install() {
