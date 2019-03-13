@@ -17,6 +17,8 @@ if ( !class_exists( 'Relevanssi_Endpoint' ) ) {
 			$this->post_types = $this->get_post_types();
 
 			add_action('rest_api_init', [$this, 'register_routes']);
+
+			register_activation_hook( __FILE__, [$this, 'install']);
 		}
 
 		public function register_routes() {
@@ -73,6 +75,12 @@ if ( !class_exists( 'Relevanssi_Endpoint' ) ) {
 			}
 
 			return $args;
+		}
+
+		public function install() {
+			if ( ! is_plugin_active( 'relevanssi/relevanssi.php' ) and current_user_can( 'activate_plugins' ) ) {
+				wp_die('Relevanssi is required to activate this plugin. <br><a href="' . admin_url( 'plugins.php' ) . '"> Return to Plugin overview</a>');
+			}
 		}
 
 		public function get_post_types() {
